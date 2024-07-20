@@ -3,10 +3,13 @@
 
 struct Splay::Node {
     int key;
-    Splay::Node* left   = nullptr;
-    Splay::Node* parent = nullptr;
-    Splay::Node* right  = nullptr;
-
+    Splay::Node* left;
+    Splay::Node* parent;
+    Splay::Node* right;
+    ~Node() {
+        delete left;
+        delete right;
+    };
     Node(int k) : key(k), left(), parent(), right() {}
 };
 
@@ -165,10 +168,9 @@ bool Splay::remove(int key) {
     if (root->right != nullptr) {
         root->right->parent = nullptr;
     }
-    root          = merge(root->left, root->right);
-    remove->left  = nullptr;
-    remove->right = nullptr;
-    delete remove;
+    root = merge(root->left, root->right);
+    // remove->left  = nullptr;
+    // remove->right = nullptr;
     size_of--;
     return true;
 }
@@ -207,13 +209,6 @@ std::vector<int> Splay::values() const noexcept {
 bool Splay::empty() const noexcept {
     return Splay::size() == 0;
 }
-void deleteTree(Splay::Node* a) {
-    if (a != nullptr) {
-        deleteTree(a->left);
-        deleteTree(a->right);
-        delete a;
-    }
-}
 Splay::~Splay() {
-    deleteTree(root);
+    delete root;
 };
